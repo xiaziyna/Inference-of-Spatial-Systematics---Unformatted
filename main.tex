@@ -1,0 +1,442 @@
+\documentclass[11pt,letter]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{deluxetable}
+\usepackage[utf8]{inputenc}
+\usepackage{comment}
+\newcommand{\Cov}{\mathrm{Cov}}
+\usepackage[
+backend=biber,
+style=alphabetic,
+citestyle=authoryear
+]{biblatex}
+
+\addbibresource{sample.bib} 
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\newtheorem{theorem}{Theorem}[section]
+
+\newtheorem{lemma}[theorem]{Lemma}
+
+
+\urlstyle{same}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{bbm}
+\usepackage{xcolor}
+
+\newcommand{\JTnote}[1]{\textcolor{orange}{\textbf{[Note from Jamila: #1]}} }
+\newcommand{\AKnote}[1]{\textcolor{red}{\textbf{[Note from Athol: #1]}} }
+\newcommand{\FKnote}[1]{\textcolor{blue}{\textbf{[Note from Farzad: #1]}} }
+
+
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand\aastex{AAS\TeX}
+\newcommand\latex{La\TeX}
+\newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
+\newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
+\newcommand{\ip}[2]{\left\langle#1,#2\right\rangle}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\Tr}{Tr}
+
+\newcommand{\LRT}[2]{%
+    \mathrel{\mathop\gtrless\limits^{#1}_{#2}}%
+}
+\title{Investigating inference of systematic noise which is spatially correlated on a sensor}
+\author{Jamila S T}
+\date{April 2020}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+Wide field transit surveys often suffer from a number of noise effects of unknown form, that corrupt time-series brightness measurements (lightcurves) in a correlated way. The signal strength of such noise effects typically far exceeds that of astrophysical signals of interest and is highly non-stationary in nature. Correlated noise is well modeled via low rank linear models, however, without further constraints can be poorly conditioned and thus susceptable to removal/distortion of astrophysical signals. We present an experimental method which jointly estimates a low rank noise model and fit values using physical sensor information in the estimation process. In particular we use spatial dependency of noise effects, when present, as a means to condition noise estimation.   
+\end{abstract}
+\section{Introduction} \label{sec:intro}
+Wide-field transit surveys have greatly advanced exoplanet science in the past two decades, enabling plentiful observations of diverse exoplanet systems and their properties. In particular space-based surveys, CoRoT (\cite{auvergne2009corot}), Kepler (\cite{borucki}), TESS (\cite{ricker2014transiting}) to date have led to the discovery of over 4300 exoplanets \footnote{See https://exoplanetarchive.ipac.caltech.edu/}. These discoveries have been enabled in part by specialized data processing techniques, for which there has been many varied developments specific to transit detection. In particular, complex noise issues which can distort and mask astrophysical observations, has been a focal point for developing novel transit data processing methods. \\
+
+Space-based transit detection instruments typically have an extreme level of photometric sensitivity, which is necessary to detect the small fluctuations in brightness caused by a transiting exoplanet (\cite{Deeg2018}), roughly 80 parts-per-million (ppm) for an earth-sun transit (\cite{Caldwell_2010}). The Kepler telescope achieved an unprecedented level of precision of 30 (ppm) over 6.5 hr intervals (for Kp=12) (\cite{Gilliland_2011}, \cite{koch}), TESS (2) achieved of 230 ppm for a 1 hr interval (Tp = 10) (comparable at the 6hr timescale), which is sufficient to detect super-Earths around bright stars. \JTnote{add in specific details, plus citations for other instruments besides Kepler, are these values before or after detrending - believe after detrending 60ppm left}. \\
+%(TESS designed to achieve <60ppm systematics, 30ppm observed due to pointing jitter) TESS CCDs and electronics are capable of performing photometry at the 100ppm (). \\ 
+
+Observations are corrupted by a complex selection of noise sources \footnote{Herein we use the term noise to refer to signals not originating from the target system.}. Noise effects can occur at the pixel level (i.e. readout error, errors in pixel response function, calibration error) or more generally due to instrument mode of operation (e.g. pointing drift, momentum dumps, downlinks, differential velocity abberation, pointing jitter) or due to external effects (e.g. seasonal variations or atmospheric noise for ground based surveys) (See \cite{kep_handbook, tess_handbook}). Point spread functions of transit instruments (Kepler and TESS) are designed to spread a stellar target over a number of pixels so that noise confined to a single pixel may be effectively corrected via averaging. Noise which is not confined to individual pixels or targets is typically referred to as systematics. Although the origins of systematics are somewhat well understood, no simple physical or stochastic model exists to characterize the complex presence of such effects in lightcurves. Systematics often shroud astrophysical signals, both due to the strength of instrumental noise and short-timescale effects which are not easily distinguished from transit signals. Removal, or accurate modeling of, systematics in lightcurves is therefore essential to achieve the level of photometric sensitivity that permits transit detection.  \\
+
+The particular origin and form of systematics is instrument dependent, for example Kepler and TESS undergo a 3 day momentum dump cycle whereby excess flux is dumped and a discontinuity appears in lightcurves (\cite{tess_handbook}). However the techniques used to remove systematics are generally data-driven and non-instrument specific. At the core of many of these techniques is the use of linear models, based on the observed high degree of correlation of systematic effects in lightcurves. The first use of a linear model was in (\cite{tfa}) applied to the HATNET database, whereby linear combinations of lightcurves or other variables, are used as a model for systematic noise. A popular alternative to using lightcurves as a basis set, is a truncated singular value decomposition (SVD) or principle component analysis (PCA) basis, computed from a set of lightcurves ( \cite{zucker}, \cite{stumpe2012kepler}). A truncated SVD is optimal for estimating a low rank model in Gaussian noise due to (\cite{eckart}), the PCA solution (which can be obtained from the SVD solution) is another optimal solution. Both obtain an orthogonal set of vectors with the leading singular values, providing a means to separate dominant features of the lightcurves from those that are rarely present. \\ %zucker uses weights for gaussian noise with different levels of variability
+
+
+Importantly, although a truncated SVD is optimal in the Gaussian noise model, the other lightcurve components are not identically Gaussian, so the SVD solution must be modified to avoid distortion of astrophysical signals of interest. One approach is to discard the associated singular values and to fit a conditioned set of weights. In the Kepler Presearch Data Conditioning - Maximum-a-posteriori (PDC-MAP) (\cite{stumpe2012kepler}, \cite{smith2012kepler}) a Bayesian prior is formed from the weights as a function of external lightcurve parameters, lightcurve systematics are estimated using a maximum-a-posteriori fit. Since the basis obtained via SVD is orthogonal and sorted by singular value, it is not necessarily representative of separate noise effects. This can make conditioning weights difficult, since the weights may not be physically intepretable or show a clear variable dependence. This issue was identified and corrected for in the Multiscale - Maximum-a-posteriori method (MS-MAP) (\cite{msmap}), by bandsplitting lightcurves for correction via PDC-MAP into different timescales, i.e. short timescale thermal unsettling events or longer term quarter to quarter variability. In practise, both PDC-MAP and MS-MAP are used to compute solutions, and in a small number of cases the PDC-MAP solution is preferred. This approach is highly effective for systematics seen in the Kepler lightcurves.  \\ 
+% cannot separate multiplicative effects, only linear
+
+Generally it is difficult to include a stochastic noise term for astrophysical signals or outlier signals as such models are typically non analytic. Instead sometimes an additional basis vector is included to represent the astrophysical signal (\cite{foreman2015systematic}), alongside a Gaussian noise model. \\
+
+The aforementioned approaches generally involve pre/post-processing the data used with SVD. However, SVD is not the only possible low rank linear model, it is not even unique as the optimal solution in the Gaussian noise case \footnote{SVD is unique up to a multiplication with a unitary matrix.} (although it is guaranteed to find a solution). A class of approaches seeks to solve for a low rank model (basis and weights), conditioned on physical aspects of the problem. The SARS algorithm (\cite{sars}) based on Sysrem (\cite{zucker}) used for detrending CoRoT light curves, includes magnitude dependent parameters to jointly fit effects and amplitudes. In (\cite{rob1, aig}) identify the issue of SVD based estimators and use a Bayesian linear model which includes a stellar signal to form a robust basis, and shrinkage priors to avoid overfitting. \\
+
+Additonally a class of methods for obtaining high-precision detrended lightcurves from pixel-level analysis has also emerged (see \cite{Crossfield_2015, deming, multiwavelength}) 
+L2 Regularized linear model (\cite{cpm})
+
+some of which utilize linear models or using Gaussian process modeling (\cite{Luger_2016}, \cite{everest2}) - regularized. . \\
+%More recently \cite{multiwavelength} \\ 
+
+%A basis comprising directly of lightcurves has a rank at most the number of lc and can be equally expressed as a set of orthogonal vectors, 
+%If one considers the rank of this set, it may be as high as its size. However if one considers the singular values of this set, they may fall off after a few values. This means the set is sufficiently represented by a lower rank model, motivating the PCA or SVD as a means to separate important features from those that are rarely present. 
+
+In this work we present an experimental method for inference of a low rank systematics model, based on a spatial correlated systematics prior. This work falls into the latter category of systematics inference models, in that it tries to jointly estimate weights and a basis based on some model conditions. 
+We show that there exists a degree of spatial correlation in Kepler systematics, our own findings are based on the earlier work of \cite{Petigura_2012}. We demonstrate a preliminary version on Kepler lightcurves.  \\
+
+The Kepler sensor is composed of 21 modules, each of which contains 2 CCDs or 4 output channels, in the PDC-MAP algorithm each module is independently detrended, within each module there is a high degree of correlation of systematics, in the PDC-MAP pipeline position of a target is used as a prior for fitting weights due to a weak dependency of coefficients on position. There is a suggested coupling between systematics caused by diff velocity abberation and distance from the center of the sensor. Thermal gradients are known to affect the sensor \cite{kinemuchi} Additionally in \cite{everest2} pixels are detrended using a set of local targets on the same module, in \cite{cpm} pixels are chosen on the same CCD. However spatial correlation is not necessarily confined to a single module or CCD. In \cite{Petigura_2012} a reduced set of lightcurves are used to obtain systematics, the leading two terms show a high degree of spatial correlation across the sensor, the authors attribute these effects to a 3-day moment cycle affecting targets with the most dispersed point-spread functions (at the center and edges), the second effect is suggested to be a thermal gradient.  \\
+ 
+In our work, systematics are modeled as a low rank linear system embedded in Gaussian noise, we incorporate a prior whereby systematics are spatially correlated. This prior is motivated by the above work and our own investigations into Kepler sensor noise properties. Our systematics prior, modeled as a penalty term, is based on the normalized correlation of neighbouring lightcurves on the sensor. We observe that although systematics are correlated thoughout the Kepler sensor, there exist sharp discontinuities in the amplitude of weights on the edges of some modules, whilst others have gradual changes. We introduce a robustness, by allowing a parameter to control the degree to which the correlation prior is Laplacian or Gaussian distributed, in the Laplacian limit our functional is very similar to the total variation functional (\cite{Rudin92nonlineartotal, vogel_book}). Furthermore a weighting matrix is incorporated that regionally sets the strength of the prior, allowing it to be reduced if a region is only weakly correlated. \\
+
+Generally, as was observed in PDC-MAP  and the SARS algorithm (\cite{smith2012kepler}, \cite{sars}), systematics are highly magnitude dependent. Kepler operated in the magnitude band Kp = 9 to 15 (\cite{koch}), both Kepler and TESS have bleed columns along which saturated stars are allowed to spill flux, in practise there is little observed astrophysical leakage onto neighbouring lightcurves due to bleeding, however some systematics may be due to saturation effects. In this work, we do not include a prior for magnitude dependency and select lightcurves from a fixed magnitude band Kp $\in$ 12.5 to 13.5. Our procedure can be modified to a particular parameter space where there are local correlations, but in this work brightness is not used as a prior. 
+\\
+
+To solve for a solution, the low rank linear model is reformulated via variable elimination (\cite{Golub2007TheDO}), which can introduce stability to the optimization problems (\cite{Golub_2003}, \cite{Shearer_2013}). A closed form gradient of the objective function exists which we choose to minimize via vanilla gradient descent due to its simplicity. \\
+
+This work is primarily investigative in nature, we perform a preliminary test of the method on Kepler simple-aperture-photometry (SAP) lightcurves. Performance is evaluated using standard detrending metrics (briefly these are - Range, 6 hr combined photometric differential precision, point-to-point scatter and a metric of high frequency noise). Alongside these metrics, we evaluate the mean pairwise (absolute) normalized correlation of detrended lightcurves. 
+
+%to show, existence and uniqueness of solution?, perturbations?
+
+\section{Correlated Systematics Model} \label{sec:Model}
+
+
+A collection of lightcurves $\{ \bold{y}_i : i \in I\}$ are obtained on a sensor, each lightcurve $\bold{y}_i$ is length $N$ time-series. Each lightcurve is modelled as containing a systematics term $\bold{l}_i$ and a zero-mean gaussian noise term $\bold{n_i}$.  %gap filling not necessary here, can have missing data
+\begin{align}
+    \bold{y}_i =  \bold{l}_i + \bold{n}_i
+\end{align}
+We consider $\bold{n}_i$ to be a white noise component $\bold{n}_i \thicksim \mathcal{N}(0, \sigma_i)$, due to a mixture of instrumental readout error and astrophysical noise. Of course $\sigma_i$ is apriori unknown, approximate estimates can be obtained from coarsely detrended lightcurves. We assume that $\sigma_i$ is roughly known, and used to normalize each lightcurve to produce $\hat{\bold{y}}_i$ where $\hat{\bold{n}}_i \thicksim \mathcal{N}(0, 1)$. \\
+
+The collection of lightcurves form the columns of matrix $\bold{Y} \in  \mathbb{R}^{N \times I}$ so that $\bold{Y} =  \bold{L} + \bold{N}$. This lightcurve model is typical in detrending literature (\cite{smith2012kepler, stumpe2012kepler, msmap}). In practise, lightcurves may contain a number of outlier points, or signals not described by the above model, it is assumed that such data can be effectively filtered/removed. Lightcurves that are removed from the sample are not the the subject of this work and we do not consider their detrending, however the methods and inferred data products can be readily utilized for these lightcurves. 
+
+\subsection{Systematics Model}
+The origin of noise specific to transit instruments is generally well understood; see (\cite{corot_in_flight, kep_handbook, tess_handbook}) for further information. However there does not exist a complete noise model for all the observed flux of noise sources. Potentially noise effects may interact and be non-linear in the observed flux variability, potentially there may be more noise sources than there are lightcurves, indeed to try to fully model each 'independent' source may not be a plausible problem. Realistically signals in a lightcurve are multiplicative instead of additive, but can be well separated via a linear model. \\
+
+We use a low rank linear model to describe the net effect of systematics.. The systematics of a particular lightcurve are described by the model:
+\begin{align}
+    \bold{l}_i = \sum_{k=1}^K \bold{v}_k \bold{c}^i_k
+\end{align}
+Where the dimension is described by $(K \ll N)$. One motivation for this model is the perspective that the bulk of systematics are generated by a small number of noise effects, which can be sufficiently modeled as a scaled version of a fixed signal. We note that we are not necessarily using a low rank model to identify unique and independent trends. Indeed the trends may not even be separable (and may have complex interactions). The low rank linear model can well approximate a system of many signals (independent or not), given they are present in almost every lightcurve in a highly correlated way. It has been claimed that a low rank model (mackay, kovasc) is insufficient to represent systematics, but the dimensionality $K$ can be very large and a low rank model is still a sufficient represenation provided the weights have a low rank structure. Since $rank(VC) \leq min (rank (V), rank(C) )$, if $rank(C)$ is low, which occurs when the weight vectors are very similar between lightcurves (i.e. have a low dimensional structure), a low rank approximation of the systematics exists. \\
+
+Typically the PCA model is used to find a low rank solution, PCA is the solution of the following optimization problem:
+\begin{align}
+    \argmin_{\bold{L}: rank(\bold{L}) \leq K} ||\bold{Y}-\bold{L}||_F^2
+\end{align}
+with $\bold{L} = \bold{V} \bold{C}$ with $\bold{V} \in  \mathbb{R}^{N \times K}, \bold{C} \in \mathbb{R}^{k \times I}$. Usually $\bold{V}$ is chosen to be orthogonal, however any $\bold{V} = \bold{V}_{PCA} \bold{U}^T$ and $\bold{C} = \bold{U} \bold{C}_{PCA}$ with $\bold{U}$ being a unitary matrix such that $\bold{U}^T\bold{U} = I$, is also a solution, meaning the optimal solution is unique up to a unitary transformation, and always exists.\\
+
+Typically the systematics amplitudes $\bold{C}$ are not directly used, since the model minimizes residual of every lightcurve, but this model does not account for the presence of alternate signals, a degree of overfitting will occur. This procedure along with data filtering to avoid biased estimates of $\bold{V}$ is highly effective in practise, but requires a degree of specialized knowledge of sensor characteristics. In this work we propose jointly estimating the systematics model conditioned on a physically motivated prior to improve estimation.  \\
+
+The low rank linear model is an approximate one, alongside Gaussian noise, there are also astrophysical as well as non-correlated instrumental errors present. Properties of systematics may be better conditioned by physical lightcurve parameters. This idea was used in the SARS algorithm (\cite{sars}) (with a color dependent penalty on the coefficients). The PDC-MAP pipeline made use of this property by conditioning estimation on an empirical probability distribution parameterized by spatial position and magnitude (\cite{smith2012kepler}). Furthermore (\cite{Petigura_2012}) present evidence that systematics are spatially correlated (within a fixed magnitude band). Herein we model systematics as being spatially correlated.\\
+
+Define the mapping $\theta(I)$ for lightcurve indices $i \in I$, where systematics vary smoothly as a function of this parametric mapping. In a sense, we assume that the ordering by the mapping increases the correlation between neighbouring elements. In the case of a spatial dependence $\theta(I) \to (X, Y)$. \\
+%Smoothness in systematics $|\bold{l}_i - \bold{l}_j| \leq \beta |\theta(i) - \theta(j) |$.  
+
+Define the normalized systematics for a lightcurve as $\bar{\bold{l}}_i = \frac{\bold{l}_i}{||\bold{l}_i ||_2^2}$, we use a model prior which seeks to maximize the normalized correlation between neighbouring ampltudes of systematics terms sorted by the mapping $\theta(I)$, but that allows for some outliers/discontinuities (subject to a tuning parameter).  We first provide some intuition for how correlation of neighbouring systematics can be incorporated into a regression problem before introducing our full model.  \\
+
+First if we directly sought to maximize correlation, the objective may be stated as:
+\begin{align}
+    \argmax_{\bold{L} : rank(\bold{L}) \leq K} \sum_{j \in \theta(I)} \bar{\bold{l}}_{j}^T \bar{\bold{l}}_{j-1}  \quad s.t. \quad \bold{Y} = \bold{L} + \bold{N}
+\end{align}
+Since $|| \bar{\bold{l}}_j ||_2 = 1$ and $|| \bar{\bold{l}}_j - \bar{\bold{l}}_{j-1} ||_2^2 = || \bar{\bold{l}}_j ||_2^2 + || \bar{\bold{l}}_{j-1} ||_2^2 - 2 \bar{\bold{l}}_j^T \bar{\bold{l}}_{j-1} = 2 -  2 \bar{\bold{l}}_j^T \bar{\bold{l}}_{j-1}$ we may equivalently formulate:
+\begin{align}
+    \argmin_{\bold{L} : rank(\bold{L}) \leq K} \sum_{j \in \theta(I)} || \bar{\bold{l}}_j - \bar{\bold{l}}_{j-1} ||_2^2 \quad s.t. \quad \bold{Y} = \bold{L} + \bold{N}
+\end{align}
+Defining a matrix of the normalized systematics $\bar{\bold{L}} \in R..$ where the columns are formed from $\hat{\bold{l}}_i$, the summation can be replaced by a linear operator which computes the difference of columns sorted by $\theta(I)$:
+\begin{align} \label{eq: l2pen}
+    \argmin_{\bold{L} : rank(\bold{L}) \leq K} || \bold{D}_\theta \bold{\bar{L}} ||_F^2 \quad s.t. \quad \bold{Y} = \bold{L} + \bold{N}
+\end{align}
+This objective seeks a low rank solution to the lightcurve model, where the normalized correlation of spatially neighbouring systematics is maximized. However in a realistic setting we expect some amount of discontinuity/variation in the systematic amplitudes sorted by the mapping, since the true functional dependence is unknown and edge effects/outliers may be introduced by saturated lightcurves or module/output edges (See Section \ref{sec: exp} for further information). 
+To incorporate the presence of such effects, we use a functional prior common in image processing, where images are often described as functions of bounded variation (\cite{Rudin92nonlineartotal, vogel_book}). A particular measure of the functions variation, known as total variation is used as the negative prior. This prior allows a small number of discontinuities in the spatial correlation, whilst largely enforcing regularity. \\
+
+Using a prior of this form, the $l2$ norm in Equation $\ref{eq: l2pen}$ is replaced by an $l1$ norm, See (reference on lp norms) for a discussion of the probabilistic interpretation of these norms. In our work we do not strictly require the prior to be exactly $p = 2$ or $p = 1$ and allow this parameter $p$ to be varied between $[1,2]$, depending on the degree of smoothness of systematic variations over a sensor. \\
+%Geometrically, for functions of equal energy the measure has minima when the variation of the function is sparsely supported - equivalent to a prior on the variation of the function that is Laplacian. \\
+
+% The following may be more suitable for an Appendix
+%- is this a subset of the original space, or an even larger space, surely a less restrictive class of functions
+
+%(Explanation here about why the prior is on the amplitudes, from a linear algebra perspective or just inuitively about the 'strength' of noise signal. )
+
+\JTnote{This paragraph needs work}
+Our prior is on the normalized systematics $\hat{\bold{l}}_i = \frac{\bold{V}\bold{c}_i}{|| \bold{V}\bold{c}_i ||_2^2}$, however optimizing over this directly is not tractable as the correlation is not separable over $\bold{V}$ and $\bold{c}_i$. In practise we use the correlation of the coefficients $\bold{c}_i$ as a proxy for systematics. This approximation is exact if all the basis vectors are equally present in lightcurves, roughly all basis vectors should be significant. To be mathematically exact this approximation is bounded below as: 
+$ ||\bold{V}|| ||\bold{D}\bold{C}^T|| \geq || \bold{D}\bold{C}^T\bold{V}^T ||_{P,F} \geq || \bold{D}\bold{C}^T || \sigma_{min} || \bold{V}^T ||$, since $\bold{C}$ is normalized the norm of $||\bold{V}||$ doesn't vary greatly with changes in C, as a proxy we roughly assume the singular values of $\bold{V}$ don't vary greatly and that $C$ is sufficiently spread so that it is highly unlikely to concentrate on one basis, and use the correlation of $C$ as a proxy. i.e.  $\hat{\bold{l}}_i \approx \frac{\bold{V}\bold{c}_i}{\sigma_{c_i}|| \bold{V}||_2^2 ||\bold{c}_i ||_2^2} = \frac{\hat{\bold{c}_i}}{\sigma_{c_i}} $ so that $\sigma$ is bounded by $1$ and the lowest singular value (but unlikely to reach this).  We choose to approximate the prior in this way because it considerably lowers the dimensionality of the problem. Intuitively this approximation means that if the basis vectors are highly imbalanced, small changes in coefficients can lead to large differences in the resulting systematics, on the other hand if they are reasonably balanced (i.e. the strength of each term is not disparate), small changes in coefficients will be reflected by a small change in the overall systematics. \\
+
+Systematic effects may be more correlated along a certain direction of a sensor, or within a certain region.  At a coarse level we can choose where and to what degree to incorporate the prior via a weighting matrix. We use a diagonal weighting matrix $\bold{W}$ which incorporates the degree of correlation of each row and column of the sensor (See Section $\ref{sec: exp}$). At a finer resolution, the norm of the prior controls the variability of systematics in that region. The generalized systematics objective is formulated as:
+\begin{align} \label{eq: obj}
+    \argmin_{\bold{V}, \bold{C}\; : \; rank(\bold{V}\bold{C}) \leq K} ||\bold{W} \bold{D}_\theta \bold{\bar{C}} ||_p^p \quad s.t. \quad \bold{Y} = \bold{V}\bold{C} + \bold{N}
+\end{align}
+With $p \in [1, 2]$
+For ease of representation, we will write the product of the weight matrix and the difference operator as a single operator: $\bold{D}_{\bold{W},\theta} = \bold{W} \bold{D}_{\theta}$. 
+\subsection{Gaussian Noise}
+Gaussian noise originates in lightcurves due to shot noise, intrinsic stellar variability and other sources. We note that the magnitude of Gaussian noise is assumed the same between lightcurves, as such a rough estimate of the noise level for each lightcurve should be computed, and the lightcurve rescaled by this value. Under the Gaussian noise model, an equivalent formulation of the objective Equation $\ref{eq: obj}$  with $p \in [1, 2]$:
+\begin{align} \label{eq: obj2}
+    \argmin_{\bold{V}, \bold{C}\; : \; rank(\bold{V}\bold{C}) \leq K} ||\bold{Y} - \bold{V}\bold{C} ||_2^2  + ||\bold{D}_{\bold{W},\theta}  \bold{\bar{C}} ||_p^p 
+\end{align}
+\JTnote{citation here for equivalence of Gaussian and l2 norm}
+\JTnote{put in appendix showing equivalence and exact definitions of median normalization}
+%Note to self: put a good reference for L1, L2 methods + Bayesian interpretation
+\section{Algorithm} \label{sec:floats}
+
+A maximum likelihood solution to the basis vectors is used to eliminate the variable dependence on $\bold{V}$ in the cost function. The minimization problem is then fully dependent on $\bold{C}$, and subject to some minor approximations, has closed form gradients. We choose to minimize the reduced objective via gradient descent, the algorithm steps are outlined in this section. 
+\subsection{Low rank systematics}
+Variable elimation can be summed up as follows:
+\begin{align}
+    \min_{\bold{V}, \bold{C}} f(\bold{V}, \bold{C}) \; \to \; \min_{\bold{C}} f(g(\bold{C}), \bold{C}) \quad : \quad g(\bold{C}) = \min_{\bold{V} | \bold{C}} f(\bold{V}, \bold{C}) 
+\end{align}
+Variable elimination applied to the objective in Equation $\ref{eq: obj2}$, reduces the objective to a single variable:
+\begin{align} \label{eq: obj2}
+    \argmin_{ \bold{C}\; : \; rank(\bold{C}) \leq K} ||(I - \bold{C}^T\bold{C}^\dagger)\bold{Y}^T||_2^2  + ||\bold{D}_{\bold{W},\theta}  \bold{\bar{C}} ||_p^p 
+\end{align}
+See Appendix \ref{ap: vp} for the details of this derivation. The rank of $\bold{C}$ is explicitly controlled by its shape $\bold{C} \in \mathbb{R}^{K \times X\cdot Y}$. The objective function can be minimized via gradient descent. We do not claim this optimization method is optimal, gradient descent was chosen for its relative simplicity. \\
+
+In principle the correlation penalty described above is non-differentiable for $p=1$ as the l1 norm is discontinuous at the origin. Herein we use a Huber approximation to the l1 function, which is differentiable at all points. This approximation adds a small error to the penalty so that it never reaches 0. This is described in more detail in Appendix \ref{ap: grad}, alongside details for obtaining the gradient descent steps described below. \\
+
+\begin{algorithm}[H]
+\SetAlgoLined
+ Initialize $\bold{C}$ for fixed $K$, fix regularization parameter $\lambda$.\\
+ \While{ $|\bold{C}_{i+1} - \bold{C}_{i}| \geq \epsilon$}{
+    1) $\nabla f(\bold{C}^i) = \nabla_{VP}(\bold{C}^i) + \lambda \nabla_{TV}(\bold{C}^i)$ \\
+    $\nabla_VP(\bold{C}^i)$ = - P_{R(\bold{C}^T)}^{\perp} \bold{Y}^T \bold{Y} ((\bold{C}^i)^{\dagger})^T
+    $\nabla(\bold{C}^i) = $ \\
+    2) $\bold{C}^{i+1} = \bold{C}^i  - \alpha^i \nabla f(\bold{C}^i)$ \\
+ }
+ \caption{Variable Projection Gradient Descent for Systematics}
+\end{algorithm}
+\JTnote{to be completed/expanded}
+An optimal point is when the component of $\bold{Y}^T\bold{Y}\bold{C}^{\dagger,T}$ that lies in the orthogonal complement of the range space of $\bold{C}^T$ (i.e. the null space of $\bold{C}$) is equal to the derivative of the prior term. \\
+An exact discussion of how to choose parameters $p, \alpha, W, \epsilon$ and model order $K$ is given in Section \ref{sec: param}. \\
+
+\section{Experiment: Kepler SAP lightcurves} \label{sec: exp}
+The method described for inference of spatially correlated systematics was applied to and evaluated on Kepler SAP lightcurves (\cite{jenkins2010overview}) selected from the MAST database\footnote{https://archive.stsci.edu/}. Every 4 quarters, approximately the same set of stars is overlaid on the sensor (\cite{aig}). We apply the described method to quarters (Q hereinafter) (6, 10 and 14), since the stellar sample is common to these datasets, we do not expect stellar variability to significantly change quarter to quarter thus providing a metric of the stability of the detrending method. Stellar targets were selected within the range $Kp \in [12, 13]$ and CDPP 12hr$ \lt 40$, this target selection criteria was informed by \cite{Petigura_2012}. \\
+
+The Kepler sensor is broken up into 24 modules (each containing 4 output channels), the layout of these modules and channels is shown in Figure (). The readout origin for each output channel starts at one of the corners of the module it is located within, hence pixel position for each output channel must be remapped to a global coordinate system. Each module is approximately 2200 x 2200 pixels in size. For a complete overview of the Kepler sensor see the Kepler Instrument Handbook (\cite{kep_handbook}). The locations of the sample targets as a function of their position on the sensor is shown in Figure \ref{fig: sensor}, for ease of analysis we focus only on the region shown in light blue and discard the targets on modules (2, 3, 4, 22, 23, 24). \\
+
+%discuss what correlation measures, negative correlation can be systematics or it can be osmething else in lc, find an example of a lc with pos corr that has variable star
+
+%(do same for TESS)
+
+
+\begin{figure}[h!] \label{fig: sensor}
+  \centering
+  \includegraphics[scale=0.6]{position_on_sensor.png}
+    \caption{Positions of all targets on the sensor for Q (10) are shown, axes lines indicate edges of modules. The colored region indicates the output modules used in this study.}
+\end{figure}
+
+\begin{figure}[h!] \label{fig: linear}
+  \centering
+  \includegraphics[scale=0.6]{high_f_lc10.png}
+    \caption{The first figure shows a sample of 15 lightcurves from Q (10), the second figure shows the effect of removing the linear component of each lightcurve and non-correlated outlier filtering. Primarily the systematics shown are due to the quarterly roll and earth point recoveries.}
+\end{figure}
+All missing/erroneous data values were gap-filled with a simple linear interpolation between the start and the end of the gap. All lightcurves are processed to remove the linear component, Figure \ref{fig: linear} shows the effects of linear detrending. Although the linear component may indeed be due to astrophysical variability, the multiplicative effect it has on systematic features is not ideal for use of a linear systematics model. It can be seen that lightcurves with opposite slopes are almost identical once the slope is removed, allowing correlated systematic features to be more effectively identified. \\
+
+Lightcurves are median normalized\footnote{$\hat{x} = \frac{x}{med(x)} - 1$} and filtered to remove roughly 10$\%$ with the highest (first order difference variability and variance). Finally, as a coarse means to remove astrophysical outliers, lightcurves are roughly detrended via PCA and the point to point scatter is 3 $\sigma$ thresholded. This leaves a sample of approximately 6000 lightcurves for a given quarter. \\
+
+The method of systematics inference is applicable to a uniform grid layout, however clearly lightcurves are non-uniformly distributed on the sensor. Although not ideal, we roughly discretize the sensor by (220)x(220) pixel sized cells and select one lightcurve from each cell. The lightcurve is selected from the filtered set of targets as the lightcurve closest to the center of the defined cell. If there is no lightcurve in that cell we select a lightcurve that falls within a neighbouring cell (choosing a lightcurve that has not already been used and is itself closest to the current cell) - here a single cell was filled in this manner. As such the region of the sensor analysed is of dimension (30 x 50) cells, with one lightcurve per cell. \\
+
+%need roughly number of lc > length of time to avoid ill condition
+
+This first PCA term is the major correlated component of systematics, in Figure \ref{fig: pca0} the first basis vector alongside PCA coefficient values for each lightcurve are given. Coefficient values for each lightcurve are plotted mapped to the location of the cells on the sensor. The leading systematics basis vector is very similar between the quarters, as is the magnitude of this effect on the sensor. Clearly systematics within a module are highly correlated, this motivated the use of PDC-MAP on a per-module basis (double check this is true). However as can be seen here and in \cite{Petigura_2012}, the leading systematic effects are common throughout the sensor, the magnitude of this effect is highly correlated within a module and sometimes module to module. \\
+
+Figure \ref{fig: mod_corr} shows the mean pairwise correlation \footnote{Correlation for two normalized and mean-subtracted lightcurves $\bold{y_i}, \bold{y_j}$ is given by $\ip{\bold{y}_i}{\bold{y}_j}$} computed for all lightcurves within a module, for each module. Alongside this, the mean neighbour pairwise correlation (including x and y neighbours) for all lightcurves within a module, per module is shown.  As can be seen, the neighbour to neighbour correlations are generally higher (especially in modules where systematics are more variable e.g. (7, 8, 9, 14, 17)). This indicates that generally systematics are highly correlated within a module (as stated in PDC-MAP paper), and for certain modules systematics undergo very little variability. Furthermore, in modules where systematics tend to be more variable (7, 8, 9, 14, 17) lightcurves are more spatially correlated than with the module ensemble. Figure \ref{fig: corr_x_y} in detail shows the correlation for each pair of neighbouring lightcurves along all rows and columns. Generally it can be seen that systematics undergo 'changes' roughly at module edges leading to negative correlations, but that in general there is a high degree of spatial correlation. \\
+%plot two lc from different output modules
+
+\begin{figure}[h!] \label{fig: pca0}
+  \centering
+  \includegraphics[scale=0.5]{pca0.png}
+    \caption{Left: The leading PCA basis vector for quarters (6, 10 and 14). Right: leading PCA component plotted as a function of sensor position for quarters (6, 10 and 14). Put mean value of each module on figure and module number in corner.}
+\end{figure}
+
+\begin{figure}[h!] \label{fig: corr_x_y}
+  \centering
+  \includegraphics[scale=0.6]{corr_full_y.png}
+    \caption{Q10 neighbour to neighbour correlation of lightcurves as a function of sensor position, edges of modules tend to have discontinuities in systematics which lead to negative correlations. The module edges occur at each multiple of 10 along x and y.}
+\end{figure}
+
+\begin{figure}[h!] \label{fig: mod_corr}
+  \centering
+  \includegraphics[scale=0.6]{mod_corr.png}
+    \caption{Black: The mean pairwise correlation of all lightcurves within a module. Module number is shown in gray. The mean pairwise neighbour correlation of all lightcurves within a module, as a difference from black is shown in purple. A positive value represents an increase. The overall mean pairwise correlation is 0.26.}
+\end{figure}
+
+
+%Since we wish to approximately estimate the degree of systematic noise correlation between lightcurves, we approximately filter out lightcurves that do not contain systematic noise for the purposes of calculating correlation statistics. Lightcurves must be $> 0.6$ correlated with 10 other lightcurves in the sample (a total of 2 lightcurves did not meet this criteria).   
+%Most neighbour correlations are positive, on edges of CCD's systematics tend to undergo a change (leading to negative correlations).  However we wish to 'discover' these effects, not necessarily enforce them. On the otherhand, if a region doesn't exhibit spatial correlation, or correlation is stronger in one direction, it can improve estimation to incorporate information at a coarse level. 
+These figures provide guidance on applying the described method, the question is, what weighting should the model prior take? We wish to infer effects without necessarily enforcing them, therefore using a coarser resolution of the weights is better practise. We chose to weight the prior along each row/column using the correlation values in Figure \ref{fig: corr_margin}.  %Alternatively we might choose both p and weights on a per module basis
+
+\begin{figure}[h!] \label{fig: corr_margin}
+  \centering
+  \includegraphics[scale=0.62]{corr_.png}
+    \caption{Q10 neighbour to neighbour correlation of lightcurves averaged for all columns and rows of the sensor. For comparison the average pairwise correlation between all lightcurves is  0.26, this suggests lightcurves are more likely to be spatially correlated than correlated with a random lightcurve (in this sample). These values are computed including negative correlations at module edges. }
+\end{figure}
+
+
+\subsection{Comparison with PCA}
+To ascertain the reliability of our method, we report results for different model orders and compare the outputs to those obtain via PCA.
+We perform a comparison of our algorithm to the results of PCA . 
+
+\subsection{Model Parameters} \label{sec: param}
+There are several free parameters to be chosen in our method, both in the choice of prior and the descent method. 
+Model order, reg param, weights, lp norm,  step size and initialization. 
+%The data provided to PCA were first mean subtracted (mean lightcurve not data value), in practise this makes an exact comparison with the same model order somewhat inconsistent since 
+\subsection{Noise metrics} \label{sec: noise_metrics}
+Evaluation of performance depends on the final use of the lightcurves, for transit detection the goal is to minimize transit-scale noise effects and preserve transit signals. More generally, preserving astrophysical variability is also desirable. \\
+
+We use several metrics used to evaluate the Kepler PDC-MAP and other detrending methods. The p2p scatter is the standard deviation of the point to point difference. The Range is a relative measure of magnitude introduced by (\cite{basri2010photometric}), it is computed by median normalizing the detrended lightcurves and computing the difference between the 95th and 5th percentile of sorted brightness values. An estimate of high-frequency noise is calculated using the procedure described in (\cite{rob1}), detrended lightcurves are boxcar smoothed on a 2hr time period and subtracted, the standard deviation of the residual is the high frequency noise level estimate. Finally the CDPP 6hr metric used in the Kepler pipeline, serves as an estimate of the level of whit enoise on a transit timescale (6hrs). This measures the component of residual systematics after detrending, alongside shot noise, measurement noise and stellar variability. As described in (\cite{aig2016, aig}), this cannot be exactly calculated so instead we follow the procedure described in \cite{Gilliland_2011} to compute a proxy of it. \\
+
+In addition, we evaluate the correlation of detrended lightcurves. We compute both the mean pairwise correlation between all lightcurves, and the mean of the absolute pairwise correlation between all lightcurves. On average, the residual lightcurves should not be highly correlated (unless they share leaked astrophysical flux). Due to the finite number of samples being averaged over, it is expected that the sample correlation will not go to zero, however it is still a useful metric and should concentrate close to zero.
+%\JTnote{Koch: An Earth-Sun analog transit produces a signal of 84 parts per million (ppm), the ratio of their areas. A central transit of an Earth-Sun analog lasts for 13 hours. The third requirement is to reliably detect transits of 84 ppm in 6.5 hrs (half of a central transit duration for an Earth-Sun analog). There are three distinct types of noise that determine the detection threshold: 1) photon-counting shot noise, 2) stellar variability and 3) measurement noise. We define the combination of these sources as the combined differential photometric precision (CDPP). CDPP=(shot noise2  + stellar variabiltiy2  + measurement noise2 ) 1/2}
+%Calculate probability distribution for Gaussian noise correlation.
+
+\section{Results}
+We tried two initializations (PCA solution for model order $K-1$, with a coefficient of all ones), and Gaussian initialization. Initialisation was not observed to have a significant impact on performance metrics, however it does lead to a different set of coefficients.  \\
+
+Figure \ref{fig: corr_ratio} shows the correlation metrics for targets detrended on quarter 10. The mean pairwise absolute correlation for all targets is plotted against the mean pairwise correlation for all targets. The scatter for each target detrended via PCA is shown in red, and via our algorithm in blue. As can be seen both algorithms achieve relatively close absolute correlation metrics, but the scatter for correlation alone is higher for PCA. Table \ref{tab:noise_metrics} gives the mean values over all targets. \\
+
+Figure \ref{fig: cdpp_ratio} shows the ratio between our algorithm and PCA detrended lightcurves of the CDPP 6hr metric described in Section \ref{sec: noise_metrics}. The ratio for the Range metrics is shown in Figure \ref {fig: range}.
+
+\begin{figure}[!htb] \label{fig: corr_ratio}
+  \centering
+  \includegraphics[scale=0.7]{corr_ratio_test img.png}
+    \caption{(note to self: fix color, PCA shown in red, alg in blue). For each detrended target the average pairwise correlation with every other target is computed. The absolute correlation axis, represents the average of the absolute-value of each pairwise correlation. This is plotted against the average correlation. The colorscale indicates the magnitude of each target. Taking the average over all targets, the absolute correlation of the alg is marginally larger than for PCA, however the average correlation is lower for our alg. } % see corr_ratio.png
+\end{figure}
+
+
+\begin{figure}[!htb] \label{fig: cdpp_ratio}
+  \centering
+  \includegraphics[scale=0.7]{cdpp_prop.png}
+    \caption{Q10 CDPP 6 hr, ratio of our algorithm to the results of PCA detrending plotted against stellar temperature. Note that a few targets are not shown as temperature measurements were not available.}
+\end{figure}
+
+\begin{figure}[!htb] \label{fig: range}
+  \centering
+  \includegraphics[scale=0.7]{range_prop.png}
+    \caption{Q10 range, ratio of our algorithm to the results of PCA detrending plotted against stellar temperature. Note that a few targets are not shown as temperature measurements were not available.}
+\end{figure}
+
+\begin{deluxetable}{cccc}
+\centering
+\tablecaption{Noise metrics \label{tab:noise_metrics}}
+\tablehead{
+\colhead{Metric} & \colhead{Average measured (alg/pca)}  \\
+\colhead{} & \colhead{K = 6} & \colhead{K = 15} & \colhead{K = 30}
+}
+\startdata
+Avg corr  & 0.68 &  & \\
+Avg abs corr & 1.2 & & \\
+Range  & 1  &  &  \\
+P2P scatter & 1 &  &  \\
+High frequency noise & 1 &  &  \\
+CDPP 6hr  & 1.01  &  &  
+\enddata
+\tablecomments{Data corresponding to Q 6, 10 and 14.}
+\end{deluxetable} 
+\clearpage
+
+\section{Discussion}
+
+\section{Appendix}
+\subsection{Functions of Bounded Total Variation}
+For an overview of total variation topics see the monograph by \cite{vogel_book}.
+
+First the weak (generalized) derivative is defined for functions which are differentiable a.e.: A function $f \in L_1$ is weakly differentiable if there exists $v$ such that:
+\begin{align}
+    \int f g' = - \int g v \quad : \quad \forall g \in \mathcal{C}_c^\infty 
+\end{align}
+%(Roughly this comes from the idea that integration by parts should hold)
+
+This idea is extended to vector valued functions, (if each component is weakly diff then $div g = \sum..$) a function $f \in L_1$ is weakly divergent if there exists $\bold{v}$ such that:
+\begin{align}
+    \int f(x) \sum \frac{\partial g}{\partial x_i} = - \int \ip{g}{v(x)} \quad : \quad \forall g \in \mathcal{C}_0^1
+\end{align}
+The measure $v(x)$ acts as the generalized gradient of $f(x)$. Define the space of functions $G = \{g \in \mathcal{C}_0^1, ||g||_2 \leq 1 \} $
+\begin{align}
+    \sup_{g \in G} \int f(x) \sum \frac{\partial g}{\partial x_i} =  \sup_{g \in G} - \int \ip{g}{v(x)} 
+\end{align}
+Clearly the second term is maximized when $g = - \frac{v(x)}{||v(x)||_2}$ so that:
+\begin{align}
+   TV(f) =  \sup_{g \in G} \int f(x) \sum \frac{\partial g}{\partial x_i} =   \int |v(x)| 
+\end{align}
+This quantity defines the measure of total variance. Furthermore when $f$ is smooth, $v(x) = \nabla f$, so the total variance can be interpreted as a measure of the absolute variability of a function. \\
+
+We introduce functions of bounded total variation, we model normalized systematic coefficients sorted by $\theta$ as belonging to this class. A function of bounded variation must first be integrable $\int |f(x)| dx \leq \infty$, then $f \in L^1$ belongs to the space of L1 integrable functions, and have bounded total variation $TV(f) \leq \infty$.  \\
+%The TV measure is convex but may not be differentiable w.r.t f at all points. 
+%(other known properties, stability, minima uniqueness, look at book curtis)
+
+Generalizing the measure to 2D space as per the spatial mapping $\theta(I) \to (X,Y)$:
+\begin{align}
+    \int \int |\nabla f | dx dy 
+\end{align}
+$\nabla f = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}\right)$
+or for non-smooth $f$: \\ %(div defn), discretization
+
+
+\subsection{Objective Function via Variable Projection} \label{ap: vp}
+citation golub 
+For fixed $\bold{C}$ the solution to $\bold{V}^T$ is simply found as the MNLS solution given by the pseudoinverse of $\bold{C}^T$,  $\hat{\bold{V}}^T = \bold{C}^\dagger \bold{Y}^T$ with $\bold{C}^\dagger = (\bold{C}\bold{C}^T)^{-1}\bold{C}$. 
+Rewriting the first term using the variable projection solution:
+\begin{align}
+    ||\bold{Y}^T - \bold{C}^T{\bold{V}}_{ML}^T ||_F^2 = ||\bold{Y}^T - \bold{C}^T\bold{C}^\dagger\bold{Y}^T ||_F^2\\
+    = || (I -  \bold{C}^T\bold{C}^\dagger)\bold{Y}^T ||_F^2
+\end{align}
+Noting that $\bold{C}^T\bold{C}^\dagger = \mathcal{P}_{R(\bold{C}^T)}$ and furthermore $(I - \mathcal{P}_{R(\bold{C}^T)}) =  P_{R(\bold{C}^T)}^{\perp}$ we obtain:
+\begin{align}
+    ||\bold{Y}^T - \bold{C}^T\hat{\bold{V}}_{ML}^T ||_F^2 = || P_{R(\bold{C}^T)}^{\perp} \bold{Y}^T||_F^2
+\end{align}
+In other words, the projection of $\bold{Y}^T$ onto the orthogonal complement of the range space of $\bold{C}^T$. 
+\begin{align} \label{eq: obj}
+    \argmin_{\bold{C} \in \mathbb{R}^{K \times I}} || P_{R(\bold{C}^T)}^{\perp} \bold{Y}^T||_F^2 + \lambda|| \bold{D}_\theta \bold{\bar{C}}^T ||_1^1
+\end{align}
+
+\subsection{Gradient-Based minimization} \label{ap: grad}
+The gradient $\nabla \in  \mathbb{R}^{K \times I}$ here is the partial derivatives of the objective $f$.
+\begin{align}
+    \nabla({\bold{C}^T}) = \nabla_{VP} + \nabla_{TV}
+\end{align}
+For clarity in computing $\navla (\bold{C}_i^T)$, expand the first term in the objective $|| P_{R(\bold{C}^T)}^{\perp} \bold{Y}^T||^2_F = \sum_{N} ||P_{R(\bold{C}^T)}^{\perp} \bold{y}[n] ||^2 $ where $\bold{y}[n]$ is the $n^{th}$ row of $\bold{Y}$ (the value of every lightcurve  at time $n$). Additionally $P_{R(\bold{C}^T)} = \bold{C}^T \bold{C}^\dagger$ and $P_{R(\bold{C}^T)}^{\perp} = (I - P_{R(\bold{C}^T)})$. The Jacobian of this term is obtained by the chain rule, and using the symmetry of the projection operator, the full proof is given in \cite{harville2008matrix}. The Jacobian $ \bold{D} \in \mathbb{R}^{K \times I}$ of the objective is:
+\begin{align}
+    \nabla_{VP}(\bold{C}^T) = - P_{R(\bold{C}^T)}^{\perp} (\sum_n \bold{y}[n]\bold{y}[n]^T ) (\bold{C}^{\dagger})^T
+ \end{align}
+Written compactly $\bold{Y}^T\bold{Y} = (\sum_n \bold{y}[n]\bold{y}[n]^T )$
+\begin{align}
+    \nabla_{VP}(\bold{C}^T) = - P_{R(\bold{C}^T)}^{\perp} \bold{Y}^T \bold{Y} (\bold{C}^{\dagger})^T 
+ \end{align}
+If an L2 penalty is used on $\hat{\bold{C}}$:
+Denote the $i^{th}$ row of a matrix $M$ by $[\bold{M}]_i$, then $[\nabla(C^T)]_i$:
+\begin{align}
+    \lambda [\bold{D}^T \bold{D} \hat{\bold{C}}^T]_i (I_K - [\hat{\bold{C}}^T]_i [\hat{\bold{C}}^T]_i^T) \frac{1}{||[\hat{\bold{C}}^T]_i ||}
+\end{align}
+
+\begin{align}
+    \frac{d || \hat{\bold{c}}_i - \hat{\bold{c}}_{i-1} ||^2}{d \bold{c}_i} = \lambda (\hat{\bold{c}}_i - \hat{\bold{c}}_{i-1})^T (I - \hat{\bold{c}}_i \hat{\bold{c}}_i^T) \frac{1}{||\bold{c}_i ||}
+\end{align}
+
+The Lp norm is non-differentiable at zero for $p \in [1,2)$, a differentiable approximation is used in place known as the Huber functional. A description of the Huber functional and it's use in total variation denoising is given in the monograph by \cite{vogel_book}.
+\begin{align}
+    || \bold{x} ||_p^p = \sum_{i} |x_i|^p \approx \sum_{i} (x_i^2 + \beta)^{\frac{p}{2}}
+\end{align}
+Since $|x| = (x^2)^{\frac{1}{2}}$. 
+
+Applied to a matrix, the norm computes the sum of the norm of each column, i.e. $||DC|| = \sum_k ||Dc_k|| $. The derivative with respect to a column of $C$ is fully independent of  Whilst the norm of each column is not fully linear with respect to individual components, 
+
+The derivative can be computed by application of the chain rule, 
+\begin{align}
+    \frac{d}{d \bold{c}_k}
+\end{align}
+
+Element wise the gradient
+
+The norm takes the sum over 
+
+From an optimization standpoint, the normalized correlation must be used or the objective can be arbitrarily minimized by setting C to zero.
+\printbibliography
+
+\end{document}

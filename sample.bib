@@ -1,0 +1,613 @@
+@MISC{Rudin92nonlineartotal,
+    author = {Leonid I. Rudin and Stanley Osher and Emad Fatemi},
+    title = {Nonlinear total variation based noise removal algorithms},
+    year = {1992}
+}
+
+@article{foreman2015systematic,
+  title={A systematic search for transiting planets in the K2 data},
+  author={Foreman-Mackey, Daniel and Montet, Benjamin T and Hogg, David W and Morton, Timothy D and Wang, Dun and Sch{\"o}lkopf, Bernhard},
+  journal={The Astrophysical Journal},
+  volume={806},
+  number={2},
+  pages={215},
+  year={2015},
+  publisher={IOP Publishing}
+}
+
+@article{kinemuchi,
+	doi = {10.1086/667603},
+	url = {https://doi.org/10.1086/667603},
+	year = 2012,
+	month = {sep},
+	publisher = {{IOP} Publishing},
+	volume = {124},
+	number = {919},
+	pages = {963--984},
+	author = {K. Kinemuchi and M. Fanelli and J. Pepper and M. Still and Steve B. Howell},
+	title = {Demystifying Kepler Data: A Primer for Systematic Artifact Mitigation},
+	journal = {Publications of the Astronomical Society of the Pacific},
+	abstract = {The Kepler spacecraft has collected data of high photometric precision and cadence almost continuously since operations began on 2009 May 2. Primarily designed to detect planetary transits and asteroseismological signals from solar-like stars, Kepler has provided high-quality data for many areas of investigation. Unconditioned simple aperture time-series photometry is, however, affected by systematic structure. Examples of these systematics include differential velocity aberration, thermal gradients across the spacecraft, and pointing variations. While exhibiting some impact on Kepler’s primary science, these systematics can critically handicap potentially ground-breaking scientific gains in other astrophysical areas, especially over long timescales greater than 10 days. As the data archive grows to provide light curves for 105 stars of many years in length, Kepler will only fulfill its broad potential for stellar astrophysics if these systematics are understood and mitigated. Post-launch developments in the Kepler archive, data reduction pipeline and open source data analysis software have helped to remove or reduce systematic artifacts. This paper provides a conceptual primer to help users of the Kepler data archive understand and recognize systematic artifacts within light curves and some methods for their removal. Specific examples of artifact mitigation are provided using data available within the archive. Through the methods defined here, the Kepler community will find a road map to maximizing the quality and employment of the Kepler legacy archive.}
+}
+
+@article{Shearer_2013,
+	doi = {10.1088/0266-5611/29/4/045003},
+	url = {https://doi.org/10.1088/0266-5611/29/4/045003},
+	year = 2013,
+	month = {mar},
+	publisher = {{IOP} Publishing},
+	volume = {29},
+	number = {4},
+	pages = {045003},
+	author = {Paul Shearer and Anna C Gilbert},
+	title = {A generalization of variable elimination for separable inverse problems beyond least squares},
+	journal = {Inverse Problems},
+	abstract = {In linear inverse problems, we have data derived from a noisy linear transformation of some unknown parameters, and we wish to estimate these unknowns from the data. Separable inverse problems are a powerful generalization in which the transformation itself depends on additional unknown parameters and we wish to determine both sets of parameters simultaneously. When separable problems are solved by optimization, convergence can often be accelerated by elimination of the linear variables, a strategy which appears most prominently in the variable projection methods due to Golub and Pereyra. Existing variable elimination methods require an explicit formula for the optimal value of the linear variables, so they cannot be used in problems with Poisson likelihoods, bound constraints, or other important departures from least squares. To address this limitation, we propose a generalization of variable elimination in which standard optimization methods are modified to behave as though a variable has been eliminated. We verify that this approach is a proper generalization by using it to re-derive several existing variable elimination techniques. We then extend the approach to bound-constrained and Poissonian problems, showing in the process that many of the best features of variable elimination methods can be duplicated in our framework. Tests on difficult exponential sum fitting and blind deconvolution problems indicate that the proposed approach can have significant speed and robustness advantages over standard methods.}
+}
+
+@article{Golub_2003,
+	doi = {10.1088/0266-5611/19/2/201},
+	url = {https://doi.org/10.1088/0266-5611/19/2/201},
+	year = 2003,
+	month = {feb},
+	publisher = {{IOP} Publishing},
+	volume = {19},
+	number = {2},
+	pages = {R1--R26},
+	author = {Gene Golub and Victor Pereyra},
+	title = {Separable nonlinear least squares: the variable projection method and its applications},
+	journal = {Inverse Problems},
+	abstract = {In this paper we review 30 years of developments and applications of the variable projection method for solving separable nonlinear least-squares problems. These are problems for which the model function is a linear combination of nonlinear functions. Taking advantage of this special structure, the method of variable projections eliminates the linear variables obtaining a somewhat more complicated function that involves only the nonlinear parameters. This procedure not only reduces the dimension of the parameter space but also results in a better-conditioned problem. The same optimization method applied to the original and reduced problems will always converge faster for the latter. We present first a historical account of the basic theoretical work and its various computer implementations, and then report on a variety of applications from electrical engineering, medical and biological imaging, chemistry, robotics, vision, and environmental sciences. An extensive bibliography is included. The method is particularly well suited for solving real and complex exponential model fitting problems, which are pervasive in their applications and are notoriously hard to solve.}
+}
+
+
+
+@article{basri2010photometric,
+  title={Photometric variability in Kepler target stars: The sun among stars—a first look},
+  author={Basri, Gibor and Walkowicz, Lucianne M and Batalha, Natalie and Gilliland, Ronald L and Jenkins, Jon and Borucki, William J and Koch, David and Caldwell, Doug and Dupree, Andrea K and Latham, David W and others},
+  journal={The Astrophysical Journal Letters},
+  volume={713},
+  number={2},
+  pages={L155},
+  year={2010},
+  publisher={IOP Publishing}
+}
+
+@article{aig2016,
+    author = {Aigrain, S. and Parviainen, H. and Pope, B. J. S.},
+    title = "{K2SC: flexible systematics correction and detrending of K2 light curves using Gaussian process regression}",
+    journal = {Monthly Notices of the Royal Astronomical Society},
+    volume = {459},
+    number = {3},
+    pages = {2408-2419},
+    year = {2016},
+    month = {04},
+    abstract = "{We present k2sc (K2 Systematics Correction), a python pipeline to model instrumental systematics and astrophysical variability in light curves from the K2 mission. k2sc uses Gaussian Process regression to model position-dependent systematics and time-dependent variability simultaneously, enabling the user to remove both (e.g. for transit searches) or to remove systematics while preserving variability (for variability studies). For periodic variables, k2sc automatically computes estimates of the period, amplitude and evolution time-scale of the variability. We apply k2sc to publicly available K2 data from Campaigns 3–5 showing that we obtain photometric precision approaching that of the original Kepler mission. We compare our results to other publicly available K2 pipelines, showing that we obtain similar or better results, on average. We use transit injection and recovery tests to evaluate the impact of k2sc on planetary transit searches in K2 Pre-search Data Conditioning data, for planet-to-star radius ratios down to Rp/R* = 0.01 and periods up to P = 40 d, and show that k2sc significantly improves the ability to distinguish between true and false detections, particularly for small planets. k2sc can be run automatically on many light curves, or manually tailored for specific objects such as pulsating stars or large amplitude eclipsing binaries. It can be run on ASCII and FITS light-curve files, regardless of their origin. Both the code and the processed light curves are publicly available, and we provide instructions for downloading and using them. The methodology used by k2sc will be applicable to future transit search missions such as TESS and PLATO.}",
+    issn = {0035-8711},
+    doi = {10.1093/mnras/stw706},
+    url = {https://doi.org/10.1093/mnras/stw706},
+    eprint = {https://academic.oup.com/mnras/article-pdf/459/3/2408/8105710/stw706.pdf},
+}
+
+
+
+
+@ARTICLE{corot_in_flight,
+       author = {{Auvergne}, M. and {Bodin}, P. and {Boisnard}, L. and {Buey}, J. -T. and {Chaintreuil}, S. and {Epstein}, G. and {Jouret}, M. and {Lam-Trong}, T. and {Levacher}, P. and {Magnan}, A. and {Perez}, R. and {Plasson}, P. and {Plesseria}, J. and {Peter}, G. and {Steller}, M. and {Tiph{\`e}ne}, D. and {Baglin}, A. and {Agogu{\'e}}, P. and {Appourchaux}, T. and {Barbet}, D. and {Beaufort}, T. and {Bellenger}, R. and {Berlin}, R. and {Bernardi}, P. and {Blouin}, D. and {Boumier}, P. and {Bonneau}, F. and {Briet}, R. and {Butler}, B. and {Cautain}, R. and {Chiavassa}, F. and {Costes}, V. and {Cuvilho}, J. and {Cunha-Parro}, V. and {de Oliveira Fialho}, F. and {Decaudin}, M. and {Defise}, J. -M. and {Djalal}, S. and {Docclo}, A. and {Drummond}, R. and {Dupuis}, O. and {Exil}, G. and {Faur{\'e}}, C. and {Gaboriaud}, A. and {Gamet}, P. and {Gavalda}, P. and {Grolleau}, E. and {Gueguen}, L. and {Guivarc'h}, V. and {Guterman}, P. and {Hasiba}, J. and {Huntzinger}, G. and {Hustaix}, H. and {Imbert}, C. and {Jeanville}, G. and {Johlander}, B. and {Jorda}, L. and {Journoud}, P. and {Karioty}, F. and {Kerjean}, L. and {Lafond}, L. and {Lapeyrere}, V. and {Landiech}, P. and {Larqu{\'e}}, T. and {Laudet}, P. and {Le Merrer}, J. and {Leporati}, L. and {Leruyet}, B. and {Levieuge}, B. and {Llebaria}, A. and {Martin}, L. and {Mazy}, E. and {Mesnager}, J. -M. and {Michel}, J. -P. and {Moalic}, J. -P. and {Monjoin}, W. and {Naudet}, D. and {Neukirchner}, S. and {Nguyen-Kim}, K. and {Ollivier}, M. and {Orcesi}, J. -L. and {Ottacher}, H. and {Oulali}, A. and {Parisot}, J. and {Perruchot}, S. and {Piacentino}, A. and {Pinheiro da Silva}, L. and {Platzer}, J. and {Pontet}, B. and {Pradines}, A. and {Quentin}, C. and {Rohbeck}, U. and {Rolland}, G. and {Rollenhagen}, F. and {Romagnan}, R. and {Russ}, N. and {Samadi}, R. and {Schmidt}, R. and {Schwartz}, N. and {Sebbag}, I. and {Smit}, H. and {Sunter}, W. and {Tello}, M. and {Toulouse}, P. and {Ulmer}, B. and {Vandermarcq}, O. and {Vergnault}, E. and {Wallner}, R. and {Waultier}, G. and {Zanatta}, P.},
+        title = "{The CoRoT satellite in flight: description and performance}",
+      journal = {\aap},
+     keywords = {instrumentation: photometers, stars: planetary systems, stars: oscillations, Astrophysics - Solar and Stellar Astrophysics},
+         year = 2009,
+        month = oct,
+       volume = {506},
+       number = {1},
+        pages = {411-424},
+          doi = {10.1051/0004-6361/200810860},
+archivePrefix = {arXiv},
+       eprint = {0901.2206},
+ primaryClass = {astro-ph.SR},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2009A&A...506..411A},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+
+@article{multiwavelength,
+author = {Hedges, Christina and Luger, Rodrigo and Dotson, Jessie and Foreman-Mackey, Daniel and Barentsen, Geert},
+year = {2021},
+month = {01},
+pages = {},
+title = {Multi-Wavelength Photometry Derived from Monochromatic Kepler Data}
+}
+
+@article{auvergne2009corot,
+  title={The CoRoT satellite in flight: description and performance},
+  author={Auvergne, M and Bodin, P and Boisnard, L and Buey, J-T and Chaintreuil, S and Epstein, G and Jouret, M and Lam-Trong, T and Levacher, P and Magnan, A and others},
+  journal={Astronomy \& Astrophysics},
+  volume={506},
+  number={1},
+  pages={411--424},
+  year={2009},
+  publisher={EDP Sciences}
+}
+
+@article{ricker2014transiting,
+  title={Transiting exoplanet survey satellite},
+  author={Ricker, George R and Winn, Joshua N and Vanderspek, Roland and Latham, David W and Bakos, G{\'a}sp{\'a}r {\'A} and Bean, Jacob L and Berta-Thompson, Zachory K and Brown, Timothy M and Buchhave, Lars and Butler, Nathaniel R and others},
+  journal={Journal of Astronomical Telescopes, Instruments, and Systems},
+  volume={1},
+  number={1},
+  pages={014003},
+  year={2014},
+  publisher={International Society for Optics and Photonics}
+}
+
+@article{Gilliland_2011,
+	doi = {10.1088/0067-0049/197/1/6},
+	url = {https://doi.org/10.1088/0067-0049/197/1/6},
+	year = 2011,
+	month = {oct},
+	publisher = {American Astronomical Society},
+	volume = {197},
+	number = {1},
+	pages = {6},
+	author = {Ronald L. Gilliland and William J. Chaplin and Edward W. Dunham and Vic S. Argabright and William J. Borucki and Gibor Basri and Stephen T. Bryson and Derek L. Buzasi and Douglas A. Caldwell and Yvonne P. Elsworth and Jon M. Jenkins and David G. Koch and Jeffrey Kolodziejczak and Andrea Miglio and Jeffrey van Cleve and Lucianne M. Walkowicz and William F. Welsh},
+	title = {{KEPLER}
+		                    {MISSION} {STELLAR} {AND} {INSTRUMENT} {NOISE} {PROPERTIES}},
+	journal = {The Astrophysical Journal Supplement Series}}
+
+@Inbook{Deeg2018,
+author="Deeg, Hans J.
+and Alonso, Roi",
+editor="Deeg, Hans J.
+and Belmonte, Juan Antonio",
+title="Transit Photometry as an Exoplanet Discovery Method",
+bookTitle="Handbook of Exoplanets ",
+year="2018",
+publisher="Springer International Publishing",
+address="Cham",
+pages="1--25",
+abstract="Photometry with the transit method has arguably been the most successful exoplanet discovery method to date. A short overview about the rise of that method to its present status is given. The method's strength is the rich set of parameters that can be obtained from transiting planets, in particular in combination with radial velocity observations; the basic principles of these parameters are given. The method has however also drawbacks, which are the low probability that transits appear in randomly oriented planet systems and the presence of astrophysical phenomena that may mimic transits and give rise to false detection positives. In the second part, we outline the main factors that determine the design of transit surveys, such as the size of the survey sample, the temporal coverage, the detection precision, the sample brightness and the methods to extract transit events from observed light curves. Lastly, an overview over past, current, and future transit surveys is given. For these surveys we indicate their basic instrument configuration and their planet catch, including the ranges of planet sizes and stellar magnitudes that were encountered. Current and future transit detection experiments concentrate primarily on bright or special targets, and we expect that the transit method remains a principal driver of exoplanet science, through new discoveries to be made and through the development of new generations of instruments.",
+isbn="978-3-319-30648-3",
+doi="10.1007/978-3-319-30648-3_117-1",
+url="https://doi.org/10.1007/978-3-319-30648-3_117-1"
+}
+
+
+@ARTICLE{koch,
+       author = {{Koch}, David G. and {Borucki}, William J. and {Basri}, Gibor and {Batalha}, Natalie M. and {Brown}, Timothy M. and {Caldwell}, Douglas and {Christensen-Dalsgaard}, J{\o}rgen and {Cochran}, William D. and {DeVore}, Edna and {Dunham}, Edward W. and {Gautier}, Thomas N., III and {Geary}, John C. and {Gilliland}, Ronald L. and {Gould}, Alan and {Jenkins}, Jon and {Kondo}, Yoji and {Latham}, David W. and {Lissauer}, Jack J. and {Marcy}, Geoffrey and {Monet}, David and {Sasselov}, Dimitar and {Boss}, Alan and {Brownlee}, Donald and {Caldwell}, John and {Dupree}, Andrea K. and {Howell}, Steve B. and {Kjeldsen}, Hans and {Meibom}, S{\o}ren and {Morrison}, David and {Owen}, Tobias and {Reitsema}, Harold and {Tarter}, Jill and {Bryson}, Stephen T. and {Dotson}, Jessie L. and {Gazis}, Paul and {Haas}, Michael R. and {Kolodziejczak}, Jeffrey and {Rowe}, Jason F. and {Van Cleve}, Jeffrey E. and {Allen}, Christopher and {Chandrasekaran}, Hema and {Clarke}, Bruce D. and {Li}, Jie and {Quintana}, Elisa V. and {Tenenbaum}, Peter and {Twicken}, Joseph D. and {Wu}, Hayley},
+        title = "{Kepler Mission Design, Realized Photometric Performance, and Early Science}",
+      journal = {\apjl},
+     keywords = {instrumentation: photometers, planetary systems, space vehicles: instruments, stars: statistics, stars: variables: general, techniques: photometric, Astrophysics - Earth and Planetary Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics},
+         year = 2010,
+        month = apr,
+       volume = {713},
+       number = {2},
+        pages = {L79-L86},
+          doi = {10.1088/2041-8205/713/2/L79},
+archivePrefix = {arXiv},
+       eprint = {1001.0268},
+ primaryClass = {astro-ph.EP},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2010ApJ...713L..79K},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+@article{Caldwell_2010,
+	doi = {10.1088/2041-8205/713/2/l92},
+	url = {https://doi.org/10.1088/2041-8205/713/2/l92},
+	year = 2010,
+	month = {mar},
+	publisher = {American Astronomical Society},
+	volume = {713},
+	number = {2},
+	pages = {L92--L96},
+	author = {Douglas A. Caldwell and Jeffery J. Kolodziejczak and Jeffrey E. Van Cleve and Jon M. Jenkins and Paul R. Gazis and Vic S. Argabright and Eric E. Bachtell and Edward W. Dunham and John C. Geary and Ronald L. Gilliland and Hema Chandrasekaran and Jie Li and Peter Tenenbaum and Hayley Wu and William J. Borucki and Stephen T. Bryson and Jessie L. Dotson and Michael R. Haas and David G. Koch},
+	title = {{INSTRUMENT} {PERFORMANCE} {IN}
+		                    {KEPLER}
+		                    {\textquotesingle}s {FIRST} {MONTHS}},
+	journal = {The Astrophysical Journal}
+}
+@ARTICLE{cpm,
+       author = {{Wang}, Dun and {Hogg}, David W. and {Foreman-Mackey}, Daniel and {Sch{\"o}lkopf}, Bernhard},
+        title = "{A Causal, Data-driven Approach to Modeling the Kepler Data}",
+      journal = {\pasp},
+     keywords = {Astrophysics - Earth and Planetary Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics},
+         year = 2016,
+        month = sep,
+       volume = {128},
+       number = {967},
+        pages = {094503},
+          doi = {10.1088/1538-3873/128/967/094503},
+archivePrefix = {arXiv},
+       eprint = {1508.01853},
+ primaryClass = {astro-ph.EP},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2016PASP..128i4503W},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+
+@article{Luger_2016,
+	doi = {10.3847/0004-6256/152/4/100},
+	url = {https://doi.org/10.3847/0004-6256/152/4/100},
+	year = 2016,
+	month = {oct},
+	publisher = {American Astronomical Society},
+	volume = {152},
+	number = {4},
+	pages = {100},
+	author = {Rodrigo Luger and Eric Agol and Ethan Kruse and Rory Barnes and Andrew Becker and Daniel Foreman-Mackey and Drake Deming},
+	title = {{EVEREST}: {PIXEL} {LEVEL} {DECORRELATION} {OFK}2 {LIGHT} {CURVES}},
+	journal = {The Astronomical Journal},
+	abstract = {We present EPIC Variability Extraction and Removal for Exoplanet Science Targets (EVEREST), an open-source pipeline for removing instrumental noise from K2 light curves. EVEREST employs a variant of pixel level decorrelation to remove systematics introduced by the spacecraft’s pointing error and a Gaussian process to capture astrophysical variability. We apply EVEREST to all K2 targets in campaigns 0–7, yielding light curves with precision comparable to that of the original Kepler mission for stars brighter than , and within a factor of two of the Kepler precision for fainter targets. We perform cross-validation and transit injection and recovery tests to validate the pipeline, and compare our light curves to the other de-trended light curves available for download at the MAST High Level Science Products archive. We find that EVEREST achieves the highest average precision of any of these pipelines for unsaturated K2 stars. The improved precision of these light curves will aid in exoplanet detection and characterization, investigations of stellar variability, asteroseismology, and other photometric studies. The EVEREST pipeline can also easily be applied to future surveys, such as the TESS mission, to correct for instrumental systematics and enable the detection of low signal-to-noise transiting exoplanets. The EVEREST light curves and the source code used to generate them are freely available online.}
+}
+
+@article{Crossfield_2015,
+	doi = {10.1088/0004-637x/804/1/10},
+	url = {https://doi.org/10.1088/0004-637x/804/1/10},
+	year = 2015,
+	month = {apr},
+	publisher = {American Astronomical Society},
+	volume = {804},
+	number = {1},
+	pages = {10},
+	author = {Ian J. M. Crossfield and Erik Petigura and Joshua E. Schlieder and Andrew W. Howard and B. J. Fulton and Kimberly M. Aller and David R. Ciardi and S{\'{e}}bastien L{\'{e}}pine and Thomas Barclay and Imke de Pater and Katherine de Kleer and Elisa V. Quintana and Jessie L. Christiansen and Eddie Schlafly and Lisa Kaltenegger and Justin R. Crepp and Thomas Henning and Christian Obermeier and Niall Deacon and Lauren M. Weiss and Howard T. Isaacson and Brad M. S. Hansen and Michael C. Liu and Tom Greene and Steve B. Howell and Travis Barman and Christoph Mordasini},
+	title = {A {NEARBY} M {STAR} {WITH} {THREE} {TRANSITING} {SUPER}-{EARTHS} {DISCOVERED} {BY} K2},
+	journal = {The Astrophysical Journal},
+	abstract = {Small, cool planets represent the typical end-products of planetary formation. Studying the architectures of these systems, measuring planet masses and radii, and observing these planets’ atmospheres during transit directly informs theories of planet assembly, migration, and evolution. Here we report the discovery of three small planets orbiting a bright (Ks = 8.6 mag) M0 dwarf using data collected as part of K2, the new ecliptic survey using the re-purposed Kepler spacecraft. Stellar spectroscopy and K2 photometry indicate that the system hosts three transiting planets with radii 1.5–2.1 , straddling the transition region between rocky and increasingly volatile-dominated compositions. With orbital periods of 10–45 days the planets receive just 1.5–10× the flux incident on Earth, making these some of the coolest small planets known orbiting a nearby star; planet d is located near the inner edge of the system’s habitable zone. The bright, low-mass star makes this system an excellent laboratory to determine the planets’ masses via Doppler spectroscopy and to constrain their atmospheric compositions via transit spectroscopy. This discovery demonstrates the ability of K2 and future space-based transit searches to find many fascinating objects of interest.}
+}
+
+@article{Kov_cs_2005,
+   title={A trend filtering algorithm for wide-field variability surveys},
+   volume={356},
+   ISSN={1365-2966},
+   url={http://dx.doi.org/10.1111/j.1365-2966.2004.08479.x},
+   DOI={10.1111/j.1365-2966.2004.08479.x},
+   number={2},
+   journal={Monthly Notices of the Royal Astronomical Society},
+   publisher={Oxford University Press (OUP)},
+   author={Kovács, Géza and Bakos, Gáspár and Noyes, Robert W.},
+   year={2005},
+   month={Jan},
+   pages={557–567}
+}
+
+
+@ARTICLE{borucki,
+       author = {{Borucki}, William J. and {Koch}, David and {Basri}, Gibor and {Batalha}, Natalie and {Brown}, Timothy and {Caldwell}, Douglas and {Caldwell}, John and {Christensen-Dalsgaard}, J{\o}rgen and {Cochran}, William D. and {DeVore}, Edna and {Dunham}, Edward W. and {Dupree}, Andrea K. and {Gautier}, Thomas N. and {Geary}, John C. and {Gilliland}, Ronald and {Gould}, Alan and {Howell}, Steve B. and {Jenkins}, Jon M. and {Kondo}, Yoji and {Latham}, David W. and {Marcy}, Geoffrey W. and {Meibom}, S{\o}ren and {Kjeldsen}, Hans and {Lissauer}, Jack J. and {Monet}, David G. and {Morrison}, David and {Sasselov}, Dimitar and {Tarter}, Jill and {Boss}, Alan and {Brownlee}, Don and {Owen}, Toby and {Buzasi}, Derek and {Charbonneau}, David and {Doyle}, Laurance and {Fortney}, Jonathan and {Ford}, Eric B. and {Holman}, Matthew J. and {Seager}, Sara and {Steffen}, Jason H. and {Welsh}, William F. and {Rowe}, Jason and {Anderson}, Howard and {Buchhave}, Lars and {Ciardi}, David and {Walkowicz}, Lucianne and {Sherry}, William and {Horch}, Elliott and {Isaacson}, Howard and {Everett}, Mark E. and {Fischer}, Debra and {Torres}, Guillermo and {Johnson}, John Asher and {Endl}, Michael and {MacQueen}, Phillip and {Bryson}, Stephen T. and {Dotson}, Jessie and {Haas}, Michael and {Kolodziejczak}, Jeffrey and {Van Cleve}, Jeffrey and {Chandrasekaran}, Hema and {Twicken}, Joseph D. and {Quintana}, Elisa V. and {Clarke}, Bruce D. and {Allen}, Christopher and {Li}, Jie and {Wu}, Haley and {Tenenbaum}, Peter and {Verner}, Ekaterina and {Bruhweiler}, Frederick and {Barnes}, Jason and {Prsa}, Andrej},
+        title = "{Kepler Planet-Detection Mission: Introduction and First Results}",
+      journal = {Science},
+     keywords = {ASTRONOMY},
+         year = 2010,
+        month = feb,
+       volume = {327},
+       number = {5968},
+        pages = {977},
+          doi = {10.1126/science.1185402},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2010Sci...327..977B},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+
+@ARTICLE{wasp,
+       author = {{Pollacco}, D.~L. and {Skillen}, I. and {Collier Cameron}, A. and {Christian}, D.~J. and {Hellier}, C. and {Irwin}, J. and {Lister}, T.~A. and {Street}, R.~A. and {West}, R.~G. and {Anderson}, D.~R. and {Clarkson}, W.~I. and {Deeg}, H. and {Enoch}, B. and {Evans}, A. and {Fitzsimmons}, A. and {Haswell}, C.~A. and {Hodgkin}, S. and {Horne}, K. and {Kane}, S.~R. and {Keenan}, F.~P. and {Maxted}, P.~F.~L. and {Norton}, A.~J. and {Osborne}, J. and {Parley}, N.~R. and {Ryans}, R.~S.~I. and {Smalley}, B. and {Wheatley}, P.~J. and {Wilson}, D.~M.},
+        title = "{The WASP Project and the SuperWASP Cameras}",
+      journal = {\pasp},
+     keywords = {Instrumentation: Photometers, Stars: Planetary Systems, Techniques: Photometric, Astrophysics},
+         year = 2006,
+        month = oct,
+       volume = {118},
+       number = {848},
+        pages = {1407-1418},
+          doi = {10.1086/508556},
+archivePrefix = {arXiv},
+       eprint = {astro-ph/0608454},
+ primaryClass = {astro-ph},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2006PASP..118.1407P},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+
+@inproceedings{ding,
+  title={On the equivalence of nonnegative matrix factorization and spectral clustering},
+  author={Ding, Chris and He, Xiaofeng and Simon, Horst D},
+  booktitle={Proceedings of the 2005 SIAM international conference on data mining},
+  pages={606--610},
+  year={2005},
+  organization={SIAM}
+}
+
+@book{harville2008matrix,
+  title={Matrix Algebra From a Statistician's Perspective},
+  author={Harville, D.A.},
+  isbn={9780387783567},
+  lccn={2008927514},
+  url={https://books.google.com/books?id=kZGBQijgGV8C},
+  year={2008},
+  publisher={Springer New York}
+}
+
+@article{Golub2007TheDO,
+  title={The differentiation of pseudo-inverses and nonlinear least squares problems whose variables separate},
+  author={Golub, Gene H and Pereyra, Victor},
+  journal={SIAM Journal on numerical analysis},
+  volume={10},
+  number={2},
+  pages={413--432},
+  year={1973},
+  publisher={SIAM}
+}
+
+@ARTICLE{bres,
+  author={Y. {Bresler} and A. {Macovski}},
+  journal={IEEE Transactions on Acoustics, Speech, and Signal Processing}, 
+  title={Exact maximum likelihood parameter estimation of superimposed exponential signals in noise}, 
+  year={1986},
+  volume={34},
+  number={5},
+  pages={1081-1089},
+  doi={10.1109/TASSP.1986.1164949}}
+  
+@article{rob1,
+    author = {Roberts, S. and McQuillan, A. and Reece, S. and Aigrain, S.},
+    title = "{Astrophysically robust systematics removal using variational inference: application to the first month of Kepler data}",
+    journal = {Monthly Notices of the Royal Astronomical Society},
+    volume = {435},
+    number = {4},
+    pages = {3639-3653},
+    year = {2013},
+    month = {09},
+    abstract = "{Space-based transit search missions such as Kepler are collecting large numbers of stellar light curves of unprecedented photometric precision and time coverage. However, before this scientific goldmine can be exploited fully, the data must be cleaned of instrumental artefacts. We present a new method to correct common-mode systematics in large ensembles of very high precision light curves. It is based on a Bayesian linear basis model and uses shrinkage priors for robustness, variational inference for speed and a de-noising step based on empirical mode decomposition to prevent the introduction of spurious noise into the corrected light curves. After demonstrating the performance of our method on a synthetic data set, we apply it to the first month of Kepler data. We compare the results, which are publicly available, to the output of the Kepler pipeline's pre-search data conditioning, and show that the two generally give similar results, but the light curves corrected using our approach have lower scatter, on average, on both long and short time-scales. We finish by discussing some limitations of our method and outlining some avenues for further development. The trend-corrected data produced by our approach are publicly available.}",
+    issn = {0035-8711},
+    doi = {10.1093/mnras/stt1555},
+    url = {https://doi.org/10.1093/mnras/stt1555},
+    eprint = {https://academic.oup.com/mnras/article-pdf/435/4/3639/3503647/stt1555.pdf},
+}
+
+@article{aig,
+    author = {Aigrain, S. and Parviainen, H. and Roberts, S. and Reece, S. and Evans, T.},
+    title = "{Robust, open-source removal of systematics in Kepler data}",
+    journal = {Monthly Notices of the Royal Astronomical Society},
+    volume = {471},
+    number = {1},
+    pages = {759-769},
+    year = {2017},
+    month = {06},
+    abstract = "{We present ARC2 (Astrophysically Robust Correction 2), an open-source python-based systematics-correction pipeline, to correct for the Kepler prime mission long-cadence light curves. The ARC2 pipeline identifies and corrects any isolated discontinuities in the light curves and then removes trends common to many light curves. These trends are modelled using the publicly available co-trending basis vectors, within an (approximate) Bayesian framework with ‘shrinkage’ priors to minimize the risk of overfitting and the injection of any additional noise into the corrected light curves, while keeping any astrophysical signals intact. We show that the ARC2 pipeline’s performance matches that of the standard Kepler PDC-MAP data products using standard noise metrics, and demonstrate its ability to preserve astrophysical signals using injection tests with simulated stellar rotation and planetary transit signals. Although it is not identical, the ARC2 pipeline can thus be used as an open-source alternative to PDC-MAP, whenever the ability to model the impact of the systematics removal process on other kinds of signal is important.}",
+    issn = {0035-8711},
+    doi = {10.1093/mnras/stx1422},
+    url = {https://doi.org/10.1093/mnras/stx1422},
+    eprint = {https://academic.oup.com/mnras/article-pdf/471/1/759/19386176/stx1422.pdf},
+}
+
+@ARTICLE{deming,
+       author = {{Deming}, Drake and {Knutson}, Heather and {Kammer}, Joshua and {Fulton}, Benjamin J. and {Ingalls}, James and {Carey}, Sean and {Burrows}, Adam and {Fortney}, Jonathan J. and {Todorov}, Kamen and {Agol}, Eric and {Cowan}, Nicolas and {Desert}, Jean-Michel and {Fraine}, Jonathan and {Langton}, Jonathan and {Morley}, Caroline and {Showman}, Adam P.},
+        title = "{Spitzer Secondary Eclipses of the Dense, Modestly-irradiated, Giant Exoplanet HAT-P-20b Using Pixel-level Decorrelation}",
+      journal = {\apj},
+     keywords = {eclipses, infrared: planetary systems, planetary systems, planets and satellites: atmospheres, Astrophysics - Earth and Planetary Astrophysics},
+         year = 2015,
+        month = jun,
+       volume = {805},
+       number = {2},
+          eid = {132},
+        pages = {132},
+          doi = {10.1088/0004-637X/805/2/132},
+archivePrefix = {arXiv},
+       eprint = {1411.7404},
+ primaryClass = {astro-ph.EP},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2015ApJ...805..132D},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+
+@MISC{kep_handbook,
+       author = {{Van Cleve}, Jeffrey E. and {Caldwell}, Douglas A.},
+        title = "{Kepler Instrument Handbook}",
+     keywords = {Kepler, K2},
+ howpublished = {Kepler Science Document KSCI-19033-002},
+         year = 2016,
+        month = apr,
+          eid = {1},
+        pages = {1},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2016ksci.rept....1V},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+@MISC{tess_handbook,
+       author = {R. Vanderspek},
+        title = "{Tess Instrument Handbook}",
+        year = 2018
+}
+
+@ARTICLE{zucker,
+       author = {{Tamuz}, O. and {Mazeh}, T. and {Zucker}, S.},
+        title = "{Correcting systematic effects in a large set of photometric light curves}",
+      journal = {\mnras},
+     keywords = {atmospheric effects, methods: data analysis, methods: statistical, techniques: photometric, surveys, planetary systems, Astrophysics},
+         year = 2005,
+        month = feb,
+       volume = {356},
+       number = {4},
+        pages = {1466-1470},
+          doi = {10.1111/j.1365-2966.2004.08585.x},
+archivePrefix = {arXiv},
+       eprint = {astro-ph/0502056},
+ primaryClass = {astro-ph},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2005MNRAS.356.1466T},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+
+@ARTICLE{everest2,
+       author = {{Luger}, Rodrigo and {Kruse}, Ethan and {Foreman-Mackey}, Daniel and {Agol}, Eric and {Saunders}, Nicholas},
+        title = "{An Update to the EVEREST K2 Pipeline: Short Cadence, Saturated Stars, and Kepler-like Photometry Down to Kp = 15}",
+      journal = {\aj},
+     keywords = {catalogs, planets and satellites: detection, techniques: photometric, Astrophysics - Instrumentation and Methods for Astrophysics, Astrophysics - Earth and Planetary Astrophysics},
+         year = 2018,
+        month = sep,
+       volume = {156},
+       number = {3},
+          eid = {99},
+        pages = {99},
+          doi = {10.3847/1538-3881/aad230},
+archivePrefix = {arXiv},
+       eprint = {1702.05488},
+ primaryClass = {astro-ph.IM},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2018AJ....156...99L},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+
+@article{msmap,
+author = {Stumpe, Martin and Smith, Jeffrey and Catanzarite, Joseph and Cleve, Jeffrey and Jenkins, Jon and Twicken, Joseph and Girouard, Forrest},
+year = {2013},
+month = {12},
+pages = {},
+title = {Multiscale Systematic Error Correction via Wavelet-Based Bandsplitting in Kepler Data},
+volume = {126},
+journal = {Publications of the Astronomical Society of the Pacific},
+doi = {10.1086/674989}
+}
+
+@article{sars,
+    author = {Ofir, Aviv and Alonso, Roi and Bonomo, Aldo Stefano and Carone, Ludmila and Carpano, Stefania and Samuel, Benjamin and Weingrill, Jörg and Aigrain, Suzanne and Auvergne, Michel and Baglin, Annie and Barge, Pierre and Borde, Pascal and Bouchy, Francois and Deeg, Hans J. and Deleuil, Magali and Dvorak, Rudolf and Erikson, Anders and Mello, Sylvio Ferraz and Fridlund, Malcolm and Gillon, Michel and Guillot, Tristan and Hatzes, Artie and Jorda, Laurent and Lammer, Helmut and Leger, Alain and Llebaria, Antoine and Moutou, Claire and Ollivier, Marc and Päetzold, Martin and Queloz, Didier and Rauer, Heike and Rouan, Daniel and Schneider, Jean and Wuchterl, Guenther},
+    title = "{The SARS algorithm: detrending CoRoT light curves with Sysrem using simultaneous external parameters}",
+    journal = {Monthly Notices of the Royal Astronomical Society: Letters},
+    volume = {404},
+    number = {1},
+    pages = {L99-L103},
+    year = {2010},
+    month = {05},
+    abstract = "{Surveys for exoplanetary transits are usually limited not by photon noise but rather by the amount of red noise in their data. In particular, although the CoRoT space-based survey data are being carefully scrutinized, significant new sources of systematic noises are still being discovered. Recently, a magnitude-dependant systematic effect was discovered in the CoRoT data by Mazeh et al. and a phenomenological correction was proposed. Here we tie the observed effect to a particular type of effect, and in the process generalize the popular Sysrem algorithm to include external parameters in a simultaneous solution with the unknown effects. We show that a post-processing scheme based on this algorithm performs well and indeed allows for the detection of new transit-like signals that were not previously detected.}",
+    issn = {1745-3925},
+    doi = {10.1111/j.1745-3933.2010.00843.x},
+    url = {https://doi.org/10.1111/j.1745-3933.2010.00843.x},
+    eprint = {https://academic.oup.com/mnrasl/article-pdf/404/1/L99/3191465/404-1-L99.pdf},
+}
+
+
+
+
+@article{smith2012kepler,
+  title={Kepler presearch data conditioning II-A bayesian approach to systematic error correction},
+  author={Smith, Jeffrey C and Stumpe, Martin C and Van Cleve, Jeffrey E and Jenkins, Jon M and Barclay, Thomas S and Fanelli, Michael N and Girouard, Forrest R and Kolodziejczak, Jeffery J and McCauliff, Sean D and Morris, Robert L and others},
+  journal={Publications of the Astronomical Society of the Pacific},
+  volume={124},
+  number={919},
+  pages={1000},
+  year={2012},
+  publisher={IOP Publishing}
+}
+@article{jenkins2010overview,
+  title={Overview of the Kepler science processing pipeline},
+  author={Jenkins, Jon M and Caldwell, Douglas A and Chandrasekaran, Hema and Twicken, Joseph D and Bryson, Stephen T and Quintana, Elisa V and Clarke, Bruce D and Li, Jie and Allen, Christopher and Tenenbaum, Peter and others},
+  journal={The Astrophysical Journal Letters},
+  volume={713},
+  number={2},
+  pages={L87},
+  year={2010},
+  publisher={IOP Publishing}
+}
+
+@article{vogel_book,
+author = {Vogel, Curtis R.},
+title = {Computational Methods for Inverse Problems},
+publisher = {Society for Industrial and Applied Mathematics},
+year = {2002},
+doi = {10.1137/1.9780898717570},
+address = {},
+edition   = {},
+URL = {https://epubs.siam.org/doi/abs/10.1137/1.9780898717570},
+eprint = {https://epubs.siam.org/doi/pdf/10.1137/1.9780898717570}
+}
+
+@book{harville2008matrix,
+  title={Matrix Algebra From a Statistician's Perspective},
+  author={Harville, D.A.},
+  isbn={9780387783567},
+  lccn={2008927514},
+  url={https://books.google.com/books?id=kZGBQijgGV8C},
+  year={2008},
+  publisher={Springer New York}
+}
+
+@article{Golub2007TheDO,
+  title={The differentiation of pseudo-inverses and nonlinear least squares problems whose variables separate},
+  author={Golub, Gene H and Pereyra, Victor},
+  journal={SIAM Journal on numerical analysis},
+  volume={10},
+  number={2},
+  pages={413--432},
+  year={1973},
+  publisher={SIAM}
+}
+
+@article{tfa,
+    author = {Kovács, Géza and Bakos, Gáspár and Noyes, Robert W.},
+    title = "{A trend filtering algorithm for wide-field variability surveys}",
+    journal = {Monthly Notices of the Royal Astronomical Society},
+    volume = {356},
+    number = {2},
+    pages = {557-567},
+    year = {2005},
+    month = {01},
+    abstract = "{We show that various systematics related to certain instrumental effects and data reduction anomalies in wide-field variability surveys can be efficiently corrected by a trend filtering algorithm (TFA) applied to the photometric time-series produced by standard data pipelines. Statistical tests, performed on the data base of the HAT Network project, show that by the application of this filtering method the cumulative detection probability of periodic transits increases by up to 0.4 for variables brighter than 11 mag, with a trend of increasing efficiency toward brighter magnitudes. We also show that the TFA can be used for the reconstruction of periodic signals by iteratively filtering out systematic distortions.}",
+    issn = {0035-8711},
+    doi = {10.1111/j.1365-2966.2004.08479.x},
+    url = {https://doi.org/10.1111/j.1365-2966.2004.08479.x},
+    eprint = {https://academic.oup.com/mnras/article-pdf/356/2/557/3973468/356-2-557.pdf},
+}
+
+
+
+
+@article{stumpe2012kepler,
+  title={Kepler presearch data conditioning I—Architecture and algorithms for error correction in Kepler light curves},
+  author={Stumpe, Martin C and Smith, Jeffrey C and Van Cleve, Jeffrey E and Twicken, Joseph D and Barclay, Thomas S and Fanelli, Michael N and Girouard, Forrest R and Jenkins, Jon M and Kolodziejczak, Jeffery J and McCauliff, Sean D and others},
+  journal={Publications of the Astronomical Society of the Pacific},
+  volume={124},
+  number={919},
+  pages={985},
+  year={2012},
+  publisher={IOP Publishing}
+}
+
+@inproceedings{zhou2010stable,
+  title={Stable principal component pursuit},
+  author={Zhou, Zihan and Li, Xiaodong and Wright, John and Candes, Emmanuel and Ma, Yi},
+  booktitle={2010 IEEE international symposium on information theory},
+  pages={1518--1522},
+  year={2010},
+  organization={IEEE}
+}
+
+@article{eckart,
+  title={The approximation of one matrix by another of lower rank},
+  author={Eckart, Carl and Young, Gale},
+  journal={Psychometrika},
+  volume={1},
+  number={3},
+  pages={211--218},
+  year={1936},
+  publisher={Springer}
+}
+
+@article{Petigura_2012,
+	doi = {10.1086/668291},
+	url = {https://doi.org/10.1086/668291},
+	year = 2012,
+	month = {oct},
+	publisher = {{IOP} Publishing},
+	volume = {124},
+	number = {920},
+	pages = {1073--1082},
+	author = {Erik A. Petigura and Geoffrey W. Marcy},
+	title = {Identification and Removal of Noise Modes in Kepler Photometry},
+	journal = {Publications of the Astronomical Society of the Pacific},
+	abstract = {We present the transiting exoearth robust reduction algorithm (TERRA)—a novel framework for identifying and removing instrumental noise in Kepler photometry. We identify instrumental noise modes by finding common trends in a large ensemble of light curves drawn from the entire Kepler field of view. Strategically, these noise modes can be optimized to reveal transits having a specified range of timescales. For Kepler target stars of low photometric noise, TERRA produces ensemble-calibrated photometry having 33 ppm rms scatter in 12 hr bins, rendering individual transits of Earth-size planets around Sun-like stars detectable as ∼3σ signals.}
+}
